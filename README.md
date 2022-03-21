@@ -9,10 +9,10 @@ The application of the “style” of a painting to a given picture using Neural
 ![Example](https://i.ibb.co/yq2WQ5q/Screenshot-2022-03-20-202438-PNG.jpg)
 ## Authors
 
-- [Carson Hymel: https://github.com/Chymel](https://github.com/Chymel)
-- [Rachel Yiu (Edit to add github link)](https://www.github.com/octokatherine)
-- [Jacob Chandler (Edit to add github link)](https://www.github.com/octokatherine)
-- [Elizabeth Dao (Edit to add github link)](https://www.github.com/octokatherine)
+- [Carson Hymel | https://github.com/Chymel | chyme21@lsu.edu](https://github.com/Chymel)
+- [Rachel Yiu | (Edit to add github link) | ryiu1@lsu.edu](https://www.github.com/octokatherine)
+- [Jacob Chandler | (Edit to add github link) | jchan24@lsu.edu](https://www.github.com/octokatherine)
+- [Elizabeth Dao | (Edit to add github link) | edao3@lsu.edu](https://www.github.com/octokatherine)
 
 
 ## References
