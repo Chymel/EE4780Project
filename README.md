@@ -10,7 +10,7 @@ The application of the “style” of a painting to a given picture using Neural
 ## Authors
 
 - [Carson Hymel | https://github.com/Chymel | chyme21@lsu.edu](https://github.com/Chymel)
-- [Rachel Yiu | (Edit to add github link) | ryiu1@lsu.edu](https://www.github.com/octokatherine)
+- [Rachel Yiu | https://github.com/ryiuready | ryiu1@lsu.edu](https://github.com/ryiuready)
 - [Jacob Chandler | (Edit to add github link) | jchan24@lsu.edu](https://www.github.com/octokatherine)
 - [Elizabeth Dao | https://github.com/edao3 | edao3@lsu.edu](https://www.github.com/edao3)
 
