@@ -2,21 +2,29 @@ import numpy as np
 import torch
 from PIL import Image
 import torchvision.transforms as transforms
-import numpy as np
 
-# Read a PIL image
-image = Image.open('tanjiro.jpg')
+content_img = Image.open('iceland.jpg')
+style_img = Image.open('starrynight.jpg')
 
-# Define a transforms to convert pIL
-# image to a torch tensor
-transform = transforms.Compose([transforms.PILToTensor()])
+# content image information
+plt.imshow(content_img)
+plt.grid(False)
+plt.show()
 
-# transform = transforms.PILToTensor()
-# Convert the Pil Image to a Torch tensor
-img_tensor = transform(image)
+# style image information
+plt.imshow(style_img)
+plt.grid(False)
+plt.show()
 
-# print the converted torch tensor
+# Image transform
+transform = transforms.Compose([transforms.ToTensor(), transforms.Resize((400, 400)),
+                                transforms.Normalize((0.485,0.456, 0.406),(0.229,0.224, 0.225))
+                                ])
+img_tensor = transform(content_img)
+img_tensortwo =transform(style_img)
+
 print(img_tensor)
+print(img_tensortwo)
 
 
 imsize = 512 if torch.cuda.is_available() else 128	#128 is a smaller size if there is no GPU
