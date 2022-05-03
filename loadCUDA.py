@@ -1,22 +1,29 @@
 import numpy as np
 import torch
+import os
+import random
 from PIL import Image
 import torchvision.transforms as transforms
 from matplotlib import pyplot as plt
+import torch.backends.cudnn as cudnn
+from vgg import VGG
 
-content_img = Image.open('C:/Users/judyd/Documents/LSU/Spring 2022/tanjiro.jpg')
-style_img = Image.open('C:/Users/judyd/Documents/LSU/Spring 2022/starrynight.jpg')
+content_layers = ['re42']
+style_layers = ['re11', 're21', 're31', 're41', 're51']
+
+torch.cuda.manual_seed_all(random.randint(1, 1000))
+if not os.path.exists("images/"):
+    os.makedirs("images/")
+    
+cudnn.benchmark = True
+
 
 
 # Image transform
 transform = transforms.Compose([transforms.ToTensor(), transforms.Resize((400, 400)),
                                 transforms.Normalize((0.485,0.456, 0.406),(0.229,0.224, 0.225))
                                 ])
-img_tensor = transform(content_img)
-img_tensortwo =transform(style_img)
 
-print(img_tensor)
-print(img_tensortwo)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -33,9 +40,8 @@ def image_loader(image_name):
     return image.to(device, torch.float)
 
 
-style_img = image_loader('C:/Users/judyd/Documents/LSU/Spring 2022/starrynight.jpg')	#insert image name here
-content_img = image_loader('C:/Users/judyd/Documents/LSU/Spring 2022/tanjiro.jpg')
-
+style_img = image_loader('noodles.jpg')	#insert image name here
+content_img = image_loader('groudon.jpg')
 
 unloader = transforms.ToPILImage()
 
@@ -61,3 +67,17 @@ imshow(style_img, title='Art Image')
 
 plt.figure()
 imshow(content_img, title='Original Image')
+
+
+style_img = style_img.cuda()
+content_img = content_img.cuda()
+
+vgg_directory = "./vgg_conv.pth"
+vgg = VGG()
+
+vgg.load_state_dict(torch.load(vgg_directory))
+for parameter in vgg.parameters():
+    parameter.requires_grad = False
+
+vgg.cuda()
+
