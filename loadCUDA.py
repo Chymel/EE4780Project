@@ -7,15 +7,6 @@ from matplotlib import pyplot as plt
 content_img = Image.open('C:/Users/judyd/Documents/LSU/Spring 2022/tanjiro.jpg')
 style_img = Image.open('C:/Users/judyd/Documents/LSU/Spring 2022/starrynight.jpg')
 
-# content image information
-plt.imshow(content_img)
-plt.grid(False)
-plt.show()
-
-# style image information
-plt.imshow(style_img)
-plt.grid(False)
-plt.show()
 
 # Image transform
 transform = transforms.Compose([transforms.ToTensor(), transforms.Resize((400, 400)),
