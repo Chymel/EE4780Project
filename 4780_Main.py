@@ -7,7 +7,10 @@ from PIL import Image
 import torchvision.transforms as transforms
 from matplotlib import pyplot as plt
 import torch.backends.cudnn as cudnn
+import torchvision.utils as tutils
 from vgg import VGG
+import torch.optim as optim
+from torch.autograd import Variable
 
 content_layers = ['re42']
 style_layers = ['re11', 're21', 're31', 're41', 're51']
@@ -48,11 +51,11 @@ unloader = transforms.ToPILImage()
 
 plt.ion()
 
-def save_img(img, tf=None, tutils=None):
-    post = tf.Compose([
-        tf.Lambda(lambda x: x.mul_(1. / 255)),
-        tf.Normalize(mean=[-0.40760392, -0.45795686, -0.48501961], std=[1, 1, 1]),
-        tf.Lambda(lambda x: x[torch.LongTensor([2, 1, 0])]),
+def save_img(img, transforms=None, tutils=None):
+    post = transforms.Compose([
+        transforms.Lambda(lambda x: x.mul_(1. / 255)),
+        transforms.Normalize(mean=[-0.40760392, -0.45795686, -0.48501961], std=[1, 1, 1]),
+        transforms.Lambda(lambda x: x[torch.LongTensor([2, 1, 0])]),
     ])
     img = post(img)
     img = img.clamp_(0, 1)
@@ -93,7 +96,7 @@ for parameter in vgg.parameters():
 
 vgg.cuda()
 
-############################################# Loss Calculations #############################################
+################## Loss Calculations ##################
 
 class Gram_Matrix(nn.Module):
     def forward(self, input):
@@ -126,10 +129,34 @@ targets = styleTarget + contentTarget
 loss_layers = style_layers + content_layers
 style_weight = 0.5
 content_weight = 0.5
-
+numberOfIterations = 10
 weights = [style_weight] * len(style_layers) + [content_weight] * len(content_layers)
+
+#############################################################################################################
+
+optimizeImg = Variable(content_img.data.clone(), requires_grad=True)
+optimizer = optim.LBFGS([optimizeImg])
 
 for every_loss in losses:
     every_loss = every_loss.cuda()
+optimizeImg.cuda()
 
-#############################################################################################################
+for i in range(1, numberOfIterations):
+    print('Iteration [', i, ']/[', numberOfIterations, ']')
+    def calc():
+        optimizer.zero_grad()
+        out = vgg(optimizeImg, loss_layers)
+        totalLossList = []
+        for j in range(len(out)):
+            layerOutput = out[j]
+            loss_j = losses[j]
+            target_j = targets[j]
+            totalLossList.append(loss_j(layerOutput, target_j) * weights[j])
+        totalLoss = sum(totalLossList)
+        totalLoss.backward()
+        return totalLoss
+    optimizer.step(calc)
+outImg = optimizeImg.data[0].cpu()
+save_img(outImg.squeeze())
+
+
