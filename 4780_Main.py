@@ -2,6 +2,7 @@ import numpy as np
 import torch
 import os
 import random
+import torch.nn as nn
 from PIL import Image
 import torchvision.transforms as transforms
 from matplotlib import pyplot as plt
@@ -14,7 +15,7 @@ style_layers = ['re11', 're21', 're31', 're41', 're51']
 torch.cuda.manual_seed_all(random.randint(1, 1000))
 if not os.path.exists("images/"):
     os.makedirs("images/")
-    
+
 cudnn.benchmark = True
 
 
@@ -46,18 +47,6 @@ content_img = image_loader('groudon.jpg')
 unloader = transforms.ToPILImage()
 
 plt.ion()
-
-def save_img(img, tf=None, tutils=None):
-    post = tf.Compose([
-        tf.Lambda(lambda x: x.mul_(1. / 255)),
-        tf.Normalize(mean=[-0.40760392, -0.45795686, -0.48501961], std=[1, 1, 1]),
-        tf.Lambda(lambda x: x[torch.LongTensor([2, 1, 0])]),
-    ])
-    img = post(img)
-    img = img.clamp_(0, 1)
-    tutils.save_image(img,
-                      '%s/transfer2.png' % ("./images"),
-                      normalize=True)
 
 
 class Picture:
@@ -93,3 +82,43 @@ for parameter in vgg.parameters():
 
 vgg.cuda()
 
+############################################# Loss Calculations #############################################
+
+class Gram_Matrix(nn.Module):
+    def forward(self, input):
+        a, b, c, d = input.size()
+        e = input.view(a, b, c * d)
+        G = torch.bmm(e, e.transpose(1, 2))
+        return G.div_(c * d)
+
+class style_Loss(nn.Module):
+    def forward(self, input, target):
+        GramInput = Gram_Matrix()(input)
+        return nn.MSELoss()(GramInput, target)
+
+styleTarget = []
+for i in vgg(style_img, style_layers):
+    i = i.detach()
+    styleTarget.append(Gram_Matrix()(i))
+
+contentTarget = []
+for i in vgg(content_img, content_layers):
+    i = i.detach()
+    contentTarget.append(i)
+
+styleLosses = [style_Loss()] * len(style_layers)
+
+contentLosses = [nn.MSELoss()] * len(content_layers)
+
+losses = styleLosses + contentLosses
+targets = styleTarget + contentTarget
+loss_layers = style_layers + content_layers
+style_weight = 0.5
+content_weight = 0.5
+
+weights = [style_weight] * len(style_layers) + [content_weight] * len(content_layers)
+
+for every_loss in losses:
+    every_loss = every_loss.cuda()
+
+#############################################################################################################
