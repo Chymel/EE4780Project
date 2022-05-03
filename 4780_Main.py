@@ -48,6 +48,17 @@ unloader = transforms.ToPILImage()
 
 plt.ion()
 
+def save_img(img, tf=None, tutils=None):
+    post = tf.Compose([
+        tf.Lambda(lambda x: x.mul_(1. / 255)),
+        tf.Normalize(mean=[-0.40760392, -0.45795686, -0.48501961], std=[1, 1, 1]),
+        tf.Lambda(lambda x: x[torch.LongTensor([2, 1, 0])]),
+    ])
+    img = post(img)
+    img = img.clamp_(0, 1)
+    tutils.save_image(img,
+                      '%s/transfer2.png' % ("./images"),
+                      normalize=True)
 
 class Picture:
     pass
