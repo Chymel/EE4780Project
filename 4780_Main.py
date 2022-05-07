@@ -12,10 +12,9 @@ import torchvision.utils as tutils
 from vgg import VGG
 import torch.optim as optim
 from torch.autograd import Variable
-import argparse
 from skimage.metrics import structural_similarity as compare_ssim
-import imutils
 import cv2
+from tqdm import tqdm
 
 content_layers = ['re42']
 style_layers = ['re11', 're21', 're31', 're41', 're51']
@@ -142,8 +141,7 @@ for every_loss in losses:
     every_loss = every_loss.cuda()
 optimizeImg.cuda()
 
-for i in range(1, numberOfIterations):
-    print('Iteration [', i, ']/[', numberOfIterations, ']')
+for i in tqdm(range(1, numberOfIterations+1), desc="Loading..."):
     def calc():
         optimizer.zero_grad()
         out = vgg(optimizeImg, loss_layers)
@@ -160,15 +158,8 @@ for i in range(1, numberOfIterations):
 outImg = optimizeImg.data[0].cpu()
 save_img(outImg.squeeze())
 
-#im1 = Image.open(styleFileName)
-#im2 = Image.open(contentFileName)
-#im3 = Image.open('images/out.png')
-
-#x1 = loader(im1).unsqueeze(0).cuda() # .cuda() for GPU
-#x2 = loader(im2).unsqueeze(0).cuda() # .cuda() for GPU
-#y = loader(im3).unsqueeze(0).cuda()
-
-
+plt.figure()
+imshow(outImg, title='Output Image')
 
 imageA = cv2.imread(styleFileName)
 imageB = cv2.imread(contentFileName)
@@ -191,5 +182,3 @@ scoreContent = "{:.2f}".format(scoreContent)
 
 print('Similarity between', styleFileName, 'and out.png: ', scoreStyle, '%')
 print('Similarity between', contentFileName, 'and out.png: ', scoreContent, '%')
-
-
