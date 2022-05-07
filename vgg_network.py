@@ -56,33 +56,32 @@ class VGG(nn.Module):
     def forward(self, x, out_params=None):
         out = {}
 
-        out['re11'] = F.relu(self.conv1_1(x))
-        out['re12'] = F.relu(self.conv1_2(out['re11']))
+        out['re11'] = F.leaky_relu(self.conv1_1(out['re11']), 0.01, inplace=False)
+        out['re12'] = F.leaky_relu(self.conv1_2(out['re11']), 0.01, inplace=False)
         out['p1'] = self.p1(out['re12'])
-
-        out['re21'] = F.relu(self.conv2_1(out['p1']))
-        out['re22'] = F.relu(self.conv2_2(out['re21']))
+        #h_relu1_2 = out['re12']
+        out['re21'] = F.leaky_relu(self.conv2_1(out['p1']), 0.01, inplace=False)
+        out['re22'] = F.leaky_relu(self.conv2_2(out['re21']), 0.01, inplace=False)
         out['p2'] = self.p2(out['re22'])
-
-        out['re31'] = F.relu(self.conv3_1(out['p2']))
-        out['re32'] = F.relu(self.conv3_2(out['re31']))
-        out['re33'] = F.relu(self.conv3_3(out['re32']))
-        out['re34'] = F.relu(self.conv3_4(out['re33']))
+        #h_relu2_2 = out['re22']
+        out['re31'] = F.leaky_relu(self.conv3_1(out['p2']), 0.01, inplace=False)
+        out['re32'] = F.leaky_relu(self.conv3_2(out['re31']), 0.01, inplace=False)
+        out['re33'] = F.leaky_relu(self.conv3_3(out['re32']), 0.01, inplace=False)
+        out['re34'] = F.leaky_relu(self.conv3_4(out['re33']), 0.01, inplace=False)
         out['p3'] = self.p3(out['re34'])
-
-        out['re41'] = F.relu(self.conv4_1(out['p3']))
-        out['re42'] = F.relu(self.conv4_2(out['re41']))
-        out['re43'] = F.relu(self.conv4_3(out['re42']))
-        out['re44'] = F.relu(self.conv4_4(out['re43']))
-
+        #h_relu3_3 = out['re33']
+        out['re41'] = F.leaky_relu(self.conv4_1(out['p3']), 0.01, inplace=False)
+        out['re42'] = F.leaky_relu(self.conv4_2(out['re41']), 0.01, inplace=False)
+        out['re43'] = F.leaky_relu(self.conv4_3(out['re42']), 0.01, inplace=False)
+        out['re44'] = F.leaky_relu(self.conv4_4(out['re43']), 0.01, inplace=False)
+        #h_relu4_3 = out['re43']
         out['p4'] = self.p4(out['re44'])
-        out['re51'] = F.relu(self.conv5_1(out['p4']))
-        out['re52'] = F.relu(self.conv5_2(out['re51']))
-        out['re53'] = F.relu(self.conv5_3(out['re52']))
-        out['re54'] = F.relu(self.conv5_4(out['re53']))
+        out['re51'] = F.leaky_relu(self.conv5_1(out['p4']), 0.01, inplace=False)
+        out['re52'] = F.leaky_relu(self.conv5_2(out['re51']), 0.01, inplace=False)
+        out['re53'] = F.leaky_relu(self.conv5_3(out['re52']), 0.01, inplace=False)
+        out['re54'] = F.leaky_relu(self.conv5_4(out['re53']), 0.01, inplace=False)
         out['p5'] = self.p5(out['re54'])
 
-        # we gather the VGG outputs
         h_relu1_2 = out['re12']
         h_relu2_2 = out['re22']
         h_relu3_3 = out['re33']
