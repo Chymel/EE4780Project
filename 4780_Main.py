@@ -23,6 +23,8 @@ cudnn.benchmark = True
 
 
 
+
+
 # Image transform
 transform = transforms.Compose([transforms.ToTensor(), transforms.Resize((400, 400)),
                                 transforms.Normalize((0.485,0.456, 0.406),(0.229,0.224, 0.225))
@@ -43,15 +45,21 @@ def image_loader(image_name):
     image = loader(image).unsqueeze(0)
     return image.to(device, torch.float)
 
+styleFileName = input("Enter the name of the image you want to use for your style image >> ")
+contentFileName = input("Enter the name of the image you want to use for your content image >> ")
 
-style_img = image_loader('noodles.jpg')	#insert image name here
-content_img = image_loader('groudon.jpg')
+style_img = image_loader(styleFileName)	#insert image name here
+content_img = image_loader(contentFileName)
 
 unloader = transforms.ToPILImage()
 
 plt.ion()
 
-def save_img(img, transforms=None, tutils=None):
+sWeight = input("Enter the Weight for the Style Image >> ")
+cWeight = input("Enter the Weight for the Content Image >> ")
+numIter = input("Enter the number of iterations to run >> ")
+
+def save_img(img):
     post = transforms.Compose([
         transforms.Lambda(lambda x: x.mul_(1. / 255)),
         transforms.Normalize(mean=[-0.40760392, -0.45795686, -0.48501961], std=[1, 1, 1]),
@@ -60,7 +68,7 @@ def save_img(img, transforms=None, tutils=None):
     img = post(img)
     img = img.clamp_(0, 1)
     tutils.save_image(img,
-                      '%s/transfer2.png' % ("./images"),
+                      '%s/out.png' % ("./images"),
                       normalize=True)
 
 class Picture:
@@ -127,9 +135,12 @@ contentLosses = [nn.MSELoss()] * len(content_layers)
 losses = styleLosses + contentLosses
 targets = styleTarget + contentTarget
 loss_layers = style_layers + content_layers
-style_weight = 0.5
-content_weight = 0.5
-numberOfIterations = 10
+
+style_weight = int(sWeight)
+content_weight = int(cWeight)
+
+numberOfIterations = int(numIter)
+
 weights = [style_weight] * len(style_layers) + [content_weight] * len(content_layers)
 
 #############################################################################################################
