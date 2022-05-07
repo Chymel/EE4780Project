@@ -61,7 +61,7 @@ numIter = input("Enter the number of iterations to run >> ")
 
 def save_img(img):
     post = transforms.Compose([
-        transforms.Lambda(lambda x: x.mul_(1. / 255)),
+        #transforms.Lambda(lambda x: x.mul_(1. / 255)),
         transforms.Normalize(mean=[-0.40760392, -0.45795686, -0.48501961], std=[1, 1, 1]),
         transforms.Lambda(lambda x: x[torch.LongTensor([2, 1, 0])]),
     ])
@@ -169,5 +169,6 @@ for i in range(1, numberOfIterations):
     optimizer.step(calc)
 outImg = optimizeImg.data[0].cpu()
 save_img(outImg.squeeze())
+
 
 
