@@ -34,7 +34,6 @@ imsize = 400 if torch.cuda.is_available() else 128	#128 is a smaller size if the
 loader = transforms.Compose([
     transforms.Resize(imsize),	#this scales the imported image
     transforms.ToTensor()]) #transformation to a torch sensor
-    #transforms.Normalize((0.485,0.456, 0.406),(0.229,0.224, 0.225))])
 
 def image_loader(image_name):
     image = Image.open(image_name)	#this is a fake batch dimension
@@ -56,12 +55,6 @@ cWeight = input("Enter the Weight for the Content Image >> ")
 numIter = input("Enter the number of iterations to run >> ")
 
 def save_img(img):
-    post = transforms.Compose([
-        #transforms.Lambda(lambda x: x.mul_(1. / 255)),
-        transforms.Normalize(mean=[-0.40760392, -0.45795686, -0.48501961], std=[1, 1, 1]),
-        #transforms.Lambda(lambda x: x[torch.LongTensor([2, 1, 0])]),
-    ])
-    img = post(img)
     img = img.clamp_(0, 1)
     tutils.save_image(img,
                       '%s/out.png' % ("./images"),
@@ -165,13 +158,3 @@ for i in range(1, numberOfIterations):
     optimizer.step(calc)
 outImg = optimizeImg.data[0].cpu()
 save_img(outImg.squeeze())
-
-
-
-
-
-
-
-
-
-
