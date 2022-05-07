@@ -32,7 +32,7 @@ class VGG(nn.Module):
         self.conv1_1 = nn.Conv2d(3, 64, kernel_size=3, padding=1)
         self.conv1_2 = nn.Conv2d(64, 64, kernel_size=3, padding=1)
         self.p1 = nn.AvgPool2d(kernel_size=2, stride=2, padding=0, ceil_mode=False, count_include_pad=False)
-
+        
         self.conv2_1 = nn.Conv2d(64, 128, kernel_size=3, padding=1)
         self.conv2_2 = nn.Conv2d(128, 128, kernel_size=3, padding=1)
         self.p2 = nn.AvgPool2d(kernel_size=2, stride=2, padding=0, ceil_mode=False, count_include_pad=False)
@@ -58,25 +58,27 @@ class VGG(nn.Module):
     def forward(self, x, out_params=None):
         out: dict[str, Tensor] = {}
 
+        # use Leaky ReLU instead of regular ReLU to take advantage of the lost dead zones of ReLU
+        # set Leaky ReLU scalar to 0.1
         out['re11'] = F.leaky_relu(self.conv1_1(x), 0.1, inplace=False)
         out['re12'] = F.leaky_relu(self.conv1_2(out['re11']), 0.1, inplace=False)
         out['p1'] = self.p1(out['re12'])
-        # h_relu1_2 = out['re12']
+       
         out['re21'] = F.leaky_relu(self.conv2_1(out['p1']), 0.1, inplace=False)
         out['re22'] = F.leaky_relu(self.conv2_2(out['re21']), 0.1, inplace=False)
         out['p2'] = self.p2(out['re22'])
-        # h_relu2_2 = out['re22']
+        
         out['re31'] = F.leaky_relu(self.conv3_1(out['p2']), 0.1, inplace=False)
         out['re32'] = F.leaky_relu(self.conv3_2(out['re31']), 0.1, inplace=False)
         out['re33'] = F.leaky_relu(self.conv3_3(out['re32']), 0.1, inplace=False)
         out['re34'] = F.leaky_relu(self.conv3_4(out['re33']), 0.1, inplace=False)
         out['p3'] = self.p3(out['re34'])
-        # h_relu3_3 = out['re33']
+        
         out['re41'] = F.leaky_relu(self.conv4_1(out['p3']), 0.1, inplace=False)
         out['re42'] = F.leaky_relu(self.conv4_2(out['re41']), 0.1, inplace=False)
         out['re43'] = F.leaky_relu(self.conv4_3(out['re42']), 0.1, inplace=False)
         out['re44'] = F.leaky_relu(self.conv4_4(out['re43']), 0.1, inplace=False)
-        # h_relu4_3 = out['re43']
+       
         out['p4'] = self.p4(out['re44'])
         out['re51'] = F.leaky_relu(self.conv5_1(out['p4']), 0.1, inplace=False)
         out['re52'] = F.leaky_relu(self.conv5_2(out['re51']), 0.1, inplace=False)
