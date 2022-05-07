@@ -55,7 +55,8 @@ class VGG(nn.Module):
 
     def forward(self, x, out_params=None):
         out = {}
-
+        
+        out['re11'] = F.leaky_relu(self.conv1_1(x), 0.1, inplace=False)
         out['re11'] = F.leaky_relu(self.conv1_1(out['re11']), 0.01, inplace=False)
         out['re12'] = F.leaky_relu(self.conv1_2(out['re11']), 0.01, inplace=False)
         out['p1'] = self.p1(out['re12'])
