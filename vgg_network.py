@@ -23,6 +23,9 @@ class VGG(nn.Module):
     def __init__(self):  
         super(VGG, self).__init__()
         ##VGG layers
+         
+        # we chose average pooling since max pooling would only take the brightest values 
+        #   and min pooling would only take the darkest values.
         self.conv1_1 = nn.Conv2d(3, 64, kernel_size=3, padding=1)
         self.conv1_2 = nn.Conv2d(64, 64, kernel_size=3, padding=1)
         self.p1 = nn.AvgPool2d(kernel_size=2, stride=2, padding=0, ceil_mode=False, count_include_pad=False)
@@ -79,6 +82,7 @@ class VGG(nn.Module):
         out['re54'] = F.relu(self.conv5_4(out['re53']))
         out['p5'] = self.p5(out['re54'])
 
+        # we gather the VGG outputs
         h_relu1_2 = out['re12']
         h_relu2_2 = out['re22']
         h_relu3_3 = out['re33']
