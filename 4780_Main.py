@@ -9,7 +9,7 @@ import torchvision.transforms as transforms
 from matplotlib import pyplot as plt
 import torch.backends.cudnn as cudnn
 import torchvision.utils as tutils
-from vgg_network import VGG
+from vgg import VGG
 import torch.optim as optim
 from torch.autograd import Variable
 from skimage.metrics import structural_similarity as compare_ssim
@@ -20,8 +20,8 @@ content_layers = ['re42']
 style_layers = ['re11', 're21', 're31', 're41', 're51']
 
 torch.cuda.manual_seed_all(random.randint(1, 1000))
-if not os.path.exists("images/"):
-    os.makedirs("images/")
+if not os.path.exists("images/outputImages"):
+    os.makedirs("images/outputImages")
 
 cudnn.benchmark = True
 
@@ -40,8 +40,13 @@ def image_loader(image_name):
     image = loader(image).unsqueeze(0)
     return image.to(device, torch.float)
 
-styleFileName = input("Enter the name of the image you want to use for your style image >> ")
-contentFileName = input("Enter the name of the image you want to use for your content image >> ")
+styleFileName0 = input("Enter the name of the image you want to use for your style image >> ")
+styleFileName = "images/styleImages/" + styleFileName0
+contentFileName0 = input("Enter the name of the image you want to use for your content image >> ")
+contentFileName = "images/contentImages/" + contentFileName0
+
+outName = styleFileName0.replace('.jpg', '') + contentFileName0.replace('.jpg', '') + ".png"
+outDir = "images/outputImages/" + outName
 
 style_img = image_loader(styleFileName)	#insert image name here
 content_img = image_loader(contentFileName)
@@ -57,7 +62,7 @@ numIter = input("Enter the number of iterations to run >> ")
 def save_img(img):
     img = img.clamp_(0, 1)
     tutils.save_image(img,
-                      '%s/out.png' % ("./images"),
+                      outDir,
                       normalize=True)
 
 class Picture:
@@ -159,11 +164,11 @@ outImg = optimizeImg.data[0].cpu()
 save_img(outImg.squeeze())
 
 plt.figure()
-imshow(outImg, title='Output Image')
+imshow(outImg, title=outName)
 
 imageA = cv2.imread(styleFileName)
 imageB = cv2.imread(contentFileName)
-imageC = cv2.imread('images/out.png')
+imageC = cv2.imread(outDir)
 
 imageA = cv2.resize(imageA, (400, 400))
 imageB = cv2.resize(imageB, (400, 400))
@@ -180,5 +185,7 @@ scoreStyle = "{:.2f}".format(scoreStyle)
 scoreContent = "{:.2f}".format(scoreContent)
 
 
-print('Similarity between', styleFileName, 'and out.png: ', scoreStyle, '%')
-print('Similarity between', contentFileName, 'and out.png: ', scoreContent, '%')
+print('Similarity between', styleFileName0, 'and', outName, ': ', scoreStyle, '%')
+print('Similarity between', contentFileName0, 'and', outName, ': ', scoreContent, '%')
+
+
