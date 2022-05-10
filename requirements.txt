@@ -1,0 +1,6 @@
+opencv-python
+torch -f https://download.pytorch.org/whl/torch_stable.html
+numpy
+tqdm
+matplotlib
+scipy
