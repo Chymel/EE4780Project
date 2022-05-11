@@ -27,26 +27,26 @@ Make sure you put your style and content images into their \
 respective directories, images/styleImages & images/contentImages
 
 Run:
-```python
+```
 python 4780_Main.py
 ```
 The program will ask you which images you want to use:
-```bash
+```
 Enter the name of the image you want to use for your style image >> picasso.jpg
 Enter the name of the image you want to use for your content image >> lion.jpg
 ```
 It will then ask you what weights you want to use:
-```bash
+```
 Enter the Weight for the Style Image >> 1000
 Enter the Weight for the Content Image >> 5
 ```
 Then it asks how many iterations you want to run:
-```bash
+```
 Enter the number of iterations to run >> 200
 ```
 The program will then continue to run for however many iterations and produce\
 an output image
-```bash
+```
 Loading...: 100%|██████████| 200/200 [03:09<00:00,  1.05it/s]
 Similarity between picasso.jpg and picassolion.png :  26.31 %
 Similarity between lion.jpg and picassolion.png :  23.98 %
