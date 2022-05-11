@@ -9,7 +9,7 @@ import torchvision.transforms as transforms
 from matplotlib import pyplot as plt
 import torch.backends.cudnn as cudnn
 import torchvision.utils as tutils
-from vgg import VGG
+from vgg_network import VGG
 import torch.optim as optim
 from torch.autograd import Variable
 from skimage.metrics import structural_similarity as compare_ssim
