@@ -30,7 +30,7 @@ Run:
 ```
 python 4780_Main.py
 ```
-The program will ask you which images you want to use:
+The program will ask you which images you want to use (only use .jpg):
 ```
 Enter the name of the image you want to use for your style image >> picasso.jpg
 Enter the name of the image you want to use for your content image >> lion.jpg
