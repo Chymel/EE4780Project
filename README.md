@@ -10,7 +10,7 @@ The application of the “style” of a painting to a given picture using Neural
 
 # Demo
 
-Team22_Demo.mov
+https://github.com/Chymel/EE4780Project/raw/main/Team22_Demo.mov
 
 ## Installation
 
