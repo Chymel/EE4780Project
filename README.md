@@ -8,6 +8,9 @@ The application of the “style” of a painting to a given picture using Neural
 
 ![Example](https://i.ibb.co/yq2WQ5q/Screenshot-2022-03-20-202438-PNG.jpg)
 
+# Demo
+
+Team22_Demo.mov
 
 ## Installation
 
