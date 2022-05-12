@@ -10,7 +10,9 @@ The application of the “style” of a painting to a given picture using Neural
 
 # Demo
 
-![Demo](Team22_Demo.mov)
+https://user-images.githubusercontent.com/93489686/168170741-6ee97bce-fce0-4829-a810-68d078606281.mov
+
+
 
 ## Installation
 
