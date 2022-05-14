@@ -61,6 +61,8 @@ Loading...: 100%|██████████| 200/200 [03:09<00:00,  1.05it/s
 Similarity between picasso.jpg and picassolion.png :  26.31 %
 Similarity between lion.jpg and picassolion.png :  23.98 %
 ```
+IMPORTANT: The above output was run on an RTX 3070 Ti, runtime will depend on your\
+GPU 
 
 While the program runs, it shows you the different images your using and then your\
 final output image:
