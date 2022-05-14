@@ -21,6 +21,11 @@ Install dependencies with pip
 ```bash
   pip install -r requirements.txt
 ```
+
+Install pyTorch with CUDA Enabled with pip
+```bash
+  pip install torch -f https://download.pytorch.org/whl/torch_stable.html
+```
     
 ## Usage
 
